@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
-import { FileUrl } from "../../models/file-url.entity";
-import { FileUrlService } from "./file-url.service";
+import { FileUrl } from "./models/fileurl.entity";
+import { FileUrlService } from "./fileurl.service";
 import { FilE_URL_REPOSITORY } from "src/constants/repository.constants";
 
 export const fileUrlProvider = [
