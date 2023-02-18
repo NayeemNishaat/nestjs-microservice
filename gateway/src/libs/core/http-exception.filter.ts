@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpException
 } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Response } from "express";
 import ResponseConstants from "src/constants/response.constant";
 import { ILogger, Logger } from "../logging/logger";
 

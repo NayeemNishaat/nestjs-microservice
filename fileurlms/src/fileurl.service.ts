@@ -28,11 +28,7 @@ export class FileUrlService {
         });
       }
 
-      throw new RpcException({
-        error: true,
-        message: err.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
-      });
+      throw new RpcException(err);
     }
   }
 
@@ -40,7 +36,14 @@ export class FileUrlService {
     id: number,
     updateFileUrlDto: UpdateFileUrlDto
   ): Promise<UpdateResult> {
-    return await this.fileUrlRepository.update({ id }, { ...updateFileUrlDto });
+    try {
+      return await this.fileUrlRepository.update(
+        { id },
+        { ...updateFileUrlDto }
+      );
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async getFileUrl(
@@ -48,25 +51,41 @@ export class FileUrlService {
     businessId: number,
     itemId: number
   ): Promise<FileUrl> {
-    return await this.fileUrlRepository.findOne({
-      where: { app_id: appId, business_id: businessId, item_id: itemId },
-      withDeleted: true
-    });
+    try {
+      return await this.fileUrlRepository.findOne({
+        where: { app_id: appId, business_id: businessId, item_id: itemId },
+        withDeleted: true
+      });
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async getFileUrlById(id: number): Promise<FileUrl> {
-    return await this.fileUrlRepository.findOne({
-      where: { id },
-      withDeleted: true
-    });
+    try {
+      return await this.fileUrlRepository.findOne({
+        where: { id },
+        withDeleted: true
+      });
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async getAllFileUrl(): Promise<FileUrl[]> {
-    return await this.fileUrlRepository.find({});
+    try {
+      return await this.fileUrlRepository.find({});
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async deleteFileUrl(id: number): Promise<UpdateResult> {
-    return await this.fileUrlRepository.softDelete(id); // Note: Soft Delete
-    // return await this.fileUrlRepository.delete(id); // Note: Hard Delete
+    try {
+      return await this.fileUrlRepository.softDelete(id); // Note: Soft Delete
+      // return await this.fileUrlRepository.delete(id); // Note: Hard Delete
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 }
