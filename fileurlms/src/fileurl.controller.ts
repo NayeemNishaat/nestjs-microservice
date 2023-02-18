@@ -7,27 +7,41 @@ import { MessagePattern, Payload } from "@nestjs/microservices";
 export class FileUrlController {
   constructor(private readonly fileUrlService: FileUrlService) {}
 
-  @MessagePattern({ cmd: "fileurl_created" })
+  @MessagePattern("create_fileurl")
   async createFileUrl(createFileUrlDto: CreateFileUrlDto) {
     return await this.fileUrlService.createFileUrl(createFileUrlDto);
   }
 
-  @MessagePattern({ cmd: "fileurl_updated" })
-  async updateFileUrl(updateFileUrlDto: UpdateFileUrlDto, id: number) {
+  @MessagePattern("update_fileurl")
+  async updateFileUrl({
+    updateFileUrlDto,
+    id
+  }: {
+    updateFileUrlDto: UpdateFileUrlDto;
+    id: number;
+  }) {
     return await this.fileUrlService.updateFileUrl(id, updateFileUrlDto);
   }
 
-  @MessagePattern({ cmd: "fileurl_read" })
-  async getFileUrl(appId: number, businessId: number, itemId: number) {
+  @MessagePattern("get_fileurl")
+  async getFileUrl({
+    appId,
+    businessId,
+    itemId
+  }: {
+    appId: number;
+    businessId: number;
+    itemId: number;
+  }) {
     return await this.fileUrlService.getFileUrl(appId, businessId, itemId);
   }
 
-  @MessagePattern({ cmd: "fileurl_read_id" })
+  @MessagePattern("get_fileurl_by_id")
   async getFileUrlById(id: number) {
     return await this.fileUrlService.getFileUrlById(id);
   }
 
-  @MessagePattern({ cmd: "fileurl_deleted" })
+  @MessagePattern("delete_fileurl")
   async deleteFileUrl(id: number) {
     return await this.fileUrlService.deleteFileUrl(id);
   }

@@ -3,7 +3,6 @@ import { Repository, UpdateResult } from "typeorm";
 import { FileUrl } from "./models/fileurl.entity";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/fileurl.dto";
 import { FilE_URL_REPOSITORY } from "src/constants/repository.constants";
-import { MessagePattern } from "@nestjs/microservices";
 
 @Injectable()
 export class FileUrlService {
@@ -12,7 +11,6 @@ export class FileUrlService {
     private fileUrlRepository: Repository<FileUrl>
   ) {}
 
-  @MessagePattern("fileurl_created")
   async createFileUrl(createFileUrlDTO: CreateFileUrlDto): Promise<FileUrl> {
     try {
       return await this.fileUrlRepository.save(

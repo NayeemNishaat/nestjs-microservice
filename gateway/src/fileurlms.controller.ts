@@ -45,85 +45,88 @@ export class FileUrlController {
     );
   }
 
-  // @Patch(":id")
-  // @ApiOkResponse({
-  //   description: "This api partially updates a file url",
-  //   type: UpdateFileUrlDto
-  // })
-  // @MessagePattern({ cmd: "fileurl_updated" })
-  // async updateFileUrl(
-  //   @Body() updateFileUrlDto: UpdateFileUrlDto,
-  //   @Param("id") id: number
-  // ) {
-  //   this.logger.info(
-  //     `[src] [modules] [fileurl] [updateFileUrl] [Patch - /fileurl/:id] => ${JSON.stringify(
-  //       {
-  //         ...updateFileUrlDto,
-  //         id
-  //       }
-  //     )}`
-  //   );
+  @Patch(":id")
+  @ApiOkResponse({
+    description: "This api partially updates a file url",
+    type: UpdateFileUrlDto
+  })
+  async updateFileUrl(
+    @Body() updateFileUrlDto: UpdateFileUrlDto,
+    @Param("id") id: number
+  ) {
+    this.logger.info(
+      `[src] [modules] [fileurl] [updateFileUrl] [Patch - /fileurl/:id] => ${JSON.stringify(
+        {
+          updateFileUrlDto,
+          id
+        }
+      )}`
+    );
 
-  //   return await this.fileUrlService.updateFileUrl(id, updateFileUrlDto);
-  // }
+    return await this.fileurlServiceClient.send("update_fileurl", {
+      updateFileUrlDto,
+      id
+    });
+  }
 
-  // @Get(":appId/:businessId/:itemId")
-  // @ApiOkResponse({
-  //   description:
-  //     "Get A File Url By appId, businessId and itemId (Soft Deleted Item Included)",
-  //   type: CreateFileUrlDto
-  // })
-  // @MessagePattern({ cmd: "fileurl_read" })
-  // async getFileUrl(
-  //   @Param("appId") appId: number,
-  //   @Param("businessId") businessId: number,
-  //   @Param("itemId") itemId: number
-  // ) {
-  //   this.logger.info(
-  //     `[src] [modules] [fileurl] [getFileUrl] [GET - /fileurl/:appId/:businessId/:itemId] => ${JSON.stringify(
-  //       {
-  //         appId,
-  //         businessId,
-  //         itemId
-  //       }
-  //     )}`
-  //   );
+  @Get(":appId/:businessId/:itemId")
+  @ApiOkResponse({
+    description:
+      "Get A File Url By appId, businessId and itemId (Soft Deleted Item Included)",
+    type: CreateFileUrlDto
+  })
+  async getFileUrl(
+    @Param("appId") appId: number,
+    @Param("businessId") businessId: number,
+    @Param("itemId") itemId: number
+  ) {
+    this.logger.info(
+      `[src] [modules] [fileurl] [getFileUrl] [GET - /fileurl/:appId/:businessId/:itemId] => ${JSON.stringify(
+        {
+          appId,
+          businessId,
+          itemId
+        }
+      )}`
+    );
 
-  //   return await this.fileUrlService.getFileUrl(appId, businessId, itemId);
-  // }
+    return await this.fileurlServiceClient.send("get_fileurl", {
+      appId,
+      businessId,
+      itemId
+    });
+  }
 
-  // @Get(":id")
-  // @ApiOkResponse({
-  //   description: "Get A File Url By Id (Soft Deleted Item Included)",
-  //   type: CreateFileUrlDto
-  // })
-  // @MessagePattern({ cmd: "fileurl_read_id" })
-  // async getFileUrlById(@Param("id") id: number) {
-  //   this.logger.info(
-  //     `[src] [modules] [fileurl] [getFileUrlById] [GET - /fileurl/:id] => ${JSON.stringify(
-  //       {
-  //         id
-  //       }
-  //     )}`
-  //   );
+  @Get(":id")
+  @ApiOkResponse({
+    description: "Get A File Url By Id (Soft Deleted Item Included)",
+    type: CreateFileUrlDto
+  })
+  async getFileUrlById(@Param("id") id: number) {
+    this.logger.info(
+      `[src] [modules] [fileurl] [getFileUrlById] [GET - /fileurl/:id] => ${JSON.stringify(
+        {
+          id
+        }
+      )}`
+    );
 
-  //   return await this.fileUrlService.getFileUrlById(id);
-  // }
+    return await this.fileurlServiceClient.send("get_fileurl_by_id", id);
+  }
 
-  // @Delete(":id")
-  // @ApiOkResponse({
-  //   description: "This api softly delets a file url"
-  // })
-  // @MessagePattern({ cmd: "fileurl_deleted" })
-  // async deleteFileUrl(@Param("id") id: number) {
-  //   this.logger.info(
-  //     `[src] [modules] [fileurl] [deleteFileUrl] [DELETE - /fileurl/:id] => ${JSON.stringify(
-  //       {
-  //         id
-  //       }
-  //     )}`
-  //   );
+  @Delete(":id")
+  @ApiOkResponse({
+    description: "This api softly delets a file url"
+  })
+  async deleteFileUrl(@Param("id") id: number) {
+    this.logger.info(
+      `[src] [modules] [fileurl] [deleteFileUrl] [DELETE - /fileurl/:id] => ${JSON.stringify(
+        {
+          id
+        }
+      )}`
+    );
 
-  //   return await this.fileUrlService.deleteFileUrl(id);
-  // }
+    return await this.fileurlServiceClient.send("delete_fileurl", id);
+  }
 }

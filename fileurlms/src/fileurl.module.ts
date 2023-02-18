@@ -22,7 +22,7 @@ import { MYSQL_DATA_SOURCE } from "./constants/provider.constant";
           password: process.env.MYSQL_PASSWORD,
           database: process.env.MYSQL_DB_NAME,
           synchronize: true,
-          entities: [__dirname + "/../../models/*.entity{.ts,.js}"]
+          entities: [__dirname + "/models/*.entity{.ts,.js}"]
         });
 
         return dataSource.initialize();
