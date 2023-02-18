@@ -41,6 +41,11 @@ export class FileUrlController {
     return await this.fileUrlService.getFileUrlById(id);
   }
 
+  @MessagePattern("get_all_fileurl")
+  async getAllFileUrl() {
+    return await this.fileUrlService.getAllFileUrl();
+  }
+
   @MessagePattern("delete_fileurl")
   async deleteFileUrl(id: number) {
     return await this.fileUrlService.deleteFileUrl(id);

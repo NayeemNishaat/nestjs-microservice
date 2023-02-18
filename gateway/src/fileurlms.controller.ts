@@ -12,7 +12,12 @@ import {
 } from "@nestjs/common";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/fileurl.dto";
 import { ResponseInterceptor } from "src/libs/core/response.interceptor";
-import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiOkResponse,
+  ApiTags,
+  ApiOperation,
+  ApiCreatedResponse
+} from "@nestjs/swagger";
 import { ClientProxy } from "@nestjs/microservices";
 import { FILEURL_SERVICE } from "./constants/provider.constant";
 
@@ -27,10 +32,13 @@ export class FileUrlController {
   ) {}
 
   @Post()
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description:
-      "Create A New File Url (appId, businessId, itemId must be unique togather)",
-    type: CreateFileUrlDto
+      "This api creates a new record (appId, businessId, itemId must be unique togather).",
+    type: () => CreateFileUrlDto
+  })
+  @ApiOperation({
+    summary: "Create a new record"
   })
   async createFileUrl(@Body() createFileUrlDto: CreateFileUrlDto) {
     this.logger.info(
@@ -40,37 +48,83 @@ export class FileUrlController {
     );
 
     return this.fileurlServiceClient.send("create_fileurl", createFileUrlDto);
+    // try {
+    // } catch (err: any) {
+    //   this.logger.error(
+    //     `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+    //       err
+    //     )}`
+    //   );
+
+    //   if (err.code === "ER_DUP_ENTRY") {
+    //     throw new HttpException(
+    //       {
+    //         error: true,
+    //         message: "itemId, appId, businessId must be unique togather!",
+    //         statusCode: HttpStatus.BAD_REQUEST
+    //       },
+    //       HttpStatus.BAD_REQUEST
+    //     );
+    //   }
+
+    //   throw new HttpException(
+    //     {
+    //       error: true,
+    //       message: err.message,
+    //       statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+    //     },
+    //     HttpStatus.INTERNAL_SERVER_ERROR
+    //   );
+    // }
   }
 
-  @Patch(":id")
+  @Get(":id")
   @ApiOkResponse({
-    description: "This api partially updates a file url",
-    type: UpdateFileUrlDto
+    description: "Get a record by id (soft deleted item included)",
+    type: CreateFileUrlDto
   })
-  async updateFileUrl(
-    @Body() updateFileUrlDto: UpdateFileUrlDto,
-    @Param("id") id: number
-  ) {
+  @ApiOperation({
+    summary: "Get a record by id"
+  })
+  async getFileUrlById(@Param("id") id: number) {
     this.logger.info(
-      `[src] [modules] [fileurl] [updateFileUrl] [Patch - /fileurl/:id] => ${JSON.stringify(
+      `[src] [modules] [fileurl] [getFileUrlById] [GET - /fileurl/:id] => ${JSON.stringify(
         {
-          updateFileUrlDto,
           id
         }
       )}`
     );
 
-    return this.fileurlServiceClient.send("update_fileurl", {
-      updateFileUrlDto,
-      id
-    });
+    return this.fileurlServiceClient.send("get_fileurl_by_id", id);
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: "Get all records (soft deleted item included)",
+    type: CreateFileUrlDto,
+    isArray: true
+  })
+  @ApiOperation({
+    summary: "Get all records"
+  })
+  async getAllFileUrl() {
+    this.logger.info(
+      `[src] [modules] [fileurl] [getFileUrlById] [GET - /fileurl/:id] => ${JSON.stringify(
+        null
+      )}`
+    );
+
+    return this.fileurlServiceClient.send("get_all_fileurl", "");
   }
 
   @Get(":appId/:businessId/:itemId")
   @ApiOkResponse({
     description:
-      "Get A File Url By appId, businessId and itemId (Soft Deleted Item Included)",
+      "Get a record by appId, businessId and itemId (soft deleted item included)",
     type: CreateFileUrlDto
+  })
+  @ApiOperation({
+    summary: "Get a record by url params"
   })
   async getFileUrl(
     @Param("appId") appId: number,
@@ -94,26 +148,72 @@ export class FileUrlController {
     });
   }
 
-  @Get(":id")
+  @Patch(":id")
   @ApiOkResponse({
-    description: "Get A File Url By Id (Soft Deleted Item Included)",
-    type: CreateFileUrlDto
+    description: "This api partially updates an existing record.",
+    schema: {
+      type: "object",
+      properties: {
+        error: { type: "boolean", default: false },
+        statusCode: { type: "number", default: 200 },
+        message: { type: "string", default: "OK" },
+        type: { type: "string", default: "object" },
+        data: {
+          type: "object",
+          properties: {
+            generatedMaps: { type: "array", default: [] },
+            raw: { type: "array", default: [] },
+            affected: { type: "number", default: 1 }
+          }
+        }
+      }
+    }
   })
-  async getFileUrlById(@Param("id") id: number) {
+  @ApiOperation({
+    summary: "Update an existing record by it's id"
+  })
+  async updateFileUrl(
+    @Body() updateFileUrlDto: UpdateFileUrlDto,
+    @Param("id") id: number
+  ) {
     this.logger.info(
-      `[src] [modules] [fileurl] [getFileUrlById] [GET - /fileurl/:id] => ${JSON.stringify(
+      `[src] [modules] [fileurl] [updateFileUrl] [Patch - /fileurl/:id] => ${JSON.stringify(
         {
+          updateFileUrlDto,
           id
         }
       )}`
     );
 
-    return this.fileurlServiceClient.send("get_fileurl_by_id", id);
+    return this.fileurlServiceClient.send("update_fileurl", {
+      updateFileUrlDto,
+      id
+    });
   }
 
   @Delete(":id")
   @ApiOkResponse({
-    description: "This api softly delets a file url"
+    description: "This api partially updates an existing record.",
+    schema: {
+      type: "object",
+      properties: {
+        error: { type: "boolean", default: false },
+        statusCode: { type: "number", default: 200 },
+        message: { type: "string", default: "OK" },
+        type: { type: "string", default: "object" },
+        data: {
+          type: "object",
+          properties: {
+            generatedMaps: { type: "array", default: [] },
+            raw: { type: "array", default: [] },
+            affected: { type: "number", default: 1 }
+          }
+        }
+      }
+    }
+  })
+  @ApiOperation({
+    summary: "Soft delete a record"
   })
   async deleteFileUrl(@Param("id") id: number) {
     this.logger.info(

@@ -1,4 +1,5 @@
-import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, Inject, HttpStatus } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
 import { Repository, UpdateResult } from "typeorm";
 import { FileUrl } from "./models/fileurl.entity";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/fileurl.dto";
@@ -20,24 +21,18 @@ export class FileUrlService {
       );
     } catch (err: any) {
       if (err.code === "ER_DUP_ENTRY") {
-        throw new HttpException(
-          {
-            error: true,
-            message: "itemId, appId, businessId must be unique togather!",
-            statusCode: HttpStatus.BAD_REQUEST
-          },
-          HttpStatus.BAD_REQUEST
-        );
+        throw new RpcException({
+          error: true,
+          message: "itemId, appId, businessId must be unique togather!",
+          statusCode: HttpStatus.BAD_REQUEST
+        });
       }
 
-      throw new HttpException(
-        {
-          error: true,
-          message: err.message,
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new RpcException({
+        error: true,
+        message: err.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      });
     }
   }
 
@@ -64,6 +59,10 @@ export class FileUrlService {
       where: { id },
       withDeleted: true
     });
+  }
+
+  async getAllFileUrl(): Promise<FileUrl[]> {
+    return await this.fileUrlRepository.find({});
   }
 
   async deleteFileUrl(id: number): Promise<UpdateResult> {
