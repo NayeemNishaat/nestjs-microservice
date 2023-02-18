@@ -1,6 +1,6 @@
 import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
 import { Repository } from "typeorm";
-import { FileUrl } from "../../models/file-url.entity";
+import { FileUrl } from "./models/file-url.entity";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/file-url.dto";
 import { ConfigService } from "@nestjs/config";
 import { FilE_URL_REPOSITORY } from "src/constants/repository.constants";

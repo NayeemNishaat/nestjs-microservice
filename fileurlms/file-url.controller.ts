@@ -1,4 +1,4 @@
-import { ILogger, Logger } from "../../libs/logging/logger";
+import { ILogger, Logger } from "../gateway/src/libs/logging/logger";
 import {
   Controller,
   Post,

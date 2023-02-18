@@ -1,11 +1,10 @@
 import { ILogger, Logger } from "./logger";
-
-const morgan = require("morgan");
+import morgan from "morgan";
 
 const logger: ILogger = Logger.getLogger();
 export const APILogger = morgan("combined", {
-  stream: <any>logger.getFileStream(),
-  skip: function (request, _) {
-    return request.path === "/api/health";
+  stream: logger.getFileStream(),
+  skip: (request, _) => {
+    return request.url.includes("/api/v1/health");
   }
 });

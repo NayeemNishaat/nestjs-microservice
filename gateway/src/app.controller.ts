@@ -1,10 +1,11 @@
-import { Controller, Get, Res } from "@nestjs/common";
-import { Response } from "express";
+import { Controller, Get, UseInterceptors } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { ILogger, Logger } from "./libs/logging/logger";
 import { ApiOkResponse } from "@nestjs/swagger";
+import { ResponseInterceptor } from "src/libs/core/response.interceptor";
 
 @Controller()
+@UseInterceptors(ResponseInterceptor)
 export class AppController {
   private readonly logger: ILogger = Logger.getLogger();
   constructor(private readonly appService: AppService) {}
@@ -13,13 +14,10 @@ export class AppController {
   @ApiOkResponse({
     description: "Get API Health"
   })
-  // @ApiNotFoundResponse({ description: "Resource not found" })
-  // @ApiForbiddenResponse({ description: "Unauthorized Request" })
-  // @ApiUnprocessableEntityResponse({ description: "Bad Request" })
-  async getHealth(@Res() res: Response) {
+  async getHealth() {
     this.logger.info(
-      `[src] [getHealth] [start] request :- ${JSON.stringify({})}`
+      `[src] [getHealth] [GET - /health] => ${JSON.stringify(null)}`
     );
-    return await this.appService.getHealth(res);
+    return await this.appService.getHealth();
   }
 }

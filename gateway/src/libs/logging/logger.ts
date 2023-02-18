@@ -1,9 +1,6 @@
-const winston = require("winston");
-const Process = require("process");
+import winston from "winston";
+import Process from "process";
 
-/**
- * custom print format for winston
- */
 const printFormat = winston.format.printf(
   ({ level, message, label = "", timestamp }) => {
     return `[${label}] ${Process.pid} - ${timestamp} ${level} ${message}`;
@@ -13,11 +10,14 @@ const printFormat = winston.format.printf(
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
-  defaultMeta: { service: "FundedNext-Certificate" },
+  defaultMeta: { service: "FileUrl" },
   transports: [
     new winston.transports.Console({
       level: "info",
+      handleExceptions: true,
       format: winston.format.combine(
+        winston.format.colorize({ all: true }),
+        winston.format.align(),
         winston.format.label({ label: "Application" }),
         winston.format.timestamp(),
         printFormat
@@ -42,7 +42,11 @@ export class Logger implements ILogger {
   }
 
   getFileStream() {
-    return logger.stream.write;
+    return {
+      write: (message: string) => {
+        logger.info(message);
+      }
+    };
   }
 
   info(message: string, ...meta: any[]): void {
