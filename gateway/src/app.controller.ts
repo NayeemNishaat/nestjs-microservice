@@ -1,10 +1,11 @@
 import { Controller, Get, UseInterceptors } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { ILogger, Logger } from "./libs/logging/logger";
-import { ApiOkResponse } from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { ResponseInterceptor } from "src/libs/core/response.interceptor";
 
 @Controller()
+@ApiTags("Health")
 @UseInterceptors(ResponseInterceptor)
 export class AppController {
   private readonly logger: ILogger = Logger.getLogger();

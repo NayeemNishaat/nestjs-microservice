@@ -1,4 +1,5 @@
-import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, Inject, HttpStatus } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
 import { Repository, UpdateResult } from "typeorm";
 import { FileUrl } from "./models/fileurl.entity";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/fileurl.dto";
@@ -20,24 +21,14 @@ export class FileUrlService {
       );
     } catch (err: any) {
       if (err.code === "ER_DUP_ENTRY") {
-        throw new HttpException(
-          {
-            error: true,
-            message: "itemId, appId, businessId must be unique togather!",
-            statusCode: HttpStatus.BAD_REQUEST
-          },
-          HttpStatus.BAD_REQUEST
-        );
+        throw new RpcException({
+          error: true,
+          message: "itemId, appId, businessId must be unique togather!",
+          statusCode: HttpStatus.BAD_REQUEST
+        });
       }
 
-      throw new HttpException(
-        {
-          error: true,
-          message: err.message,
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new RpcException(err);
     }
   }
 
@@ -45,7 +36,14 @@ export class FileUrlService {
     id: number,
     updateFileUrlDto: UpdateFileUrlDto
   ): Promise<UpdateResult> {
-    return await this.fileUrlRepository.update({ id }, { ...updateFileUrlDto });
+    try {
+      return await this.fileUrlRepository.update(
+        { id },
+        { ...updateFileUrlDto }
+      );
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async getFileUrl(
@@ -53,21 +51,41 @@ export class FileUrlService {
     businessId: number,
     itemId: number
   ): Promise<FileUrl> {
-    return await this.fileUrlRepository.findOne({
-      where: { app_id: appId, business_id: businessId, item_id: itemId },
-      withDeleted: true
-    });
+    try {
+      return await this.fileUrlRepository.findOne({
+        where: { app_id: appId, business_id: businessId, item_id: itemId },
+        withDeleted: true
+      });
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async getFileUrlById(id: number): Promise<FileUrl> {
-    return await this.fileUrlRepository.findOne({
-      where: { id },
-      withDeleted: true
-    });
+    try {
+      return await this.fileUrlRepository.findOne({
+        where: { id },
+        withDeleted: true
+      });
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
+  }
+
+  async getAllFileUrl(): Promise<FileUrl[]> {
+    try {
+      return await this.fileUrlRepository.find({});
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 
   async deleteFileUrl(id: number): Promise<UpdateResult> {
-    return await this.fileUrlRepository.softDelete(id); // Note: Soft Delete
-    // return await this.fileUrlRepository.delete(id); // Note: Hard Delete
+    try {
+      return await this.fileUrlRepository.softDelete(id); // Note: Soft Delete
+      // return await this.fileUrlRepository.delete(id); // Note: Hard Delete
+    } catch (err: any) {
+      throw new RpcException(err);
+    }
   }
 }
