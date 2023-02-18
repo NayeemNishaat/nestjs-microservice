@@ -8,7 +8,8 @@ import {
   Body,
   Param,
   UseInterceptors,
-  Inject
+  Inject,
+  HttpException
 } from "@nestjs/common";
 import { CreateFileUrlDto, UpdateFileUrlDto } from "./dto/fileurl.dto";
 import { ResponseInterceptor } from "src/libs/core/response.interceptor";
@@ -19,6 +20,7 @@ import {
   ApiCreatedResponse
 } from "@nestjs/swagger";
 import { ClientProxy } from "@nestjs/microservices";
+import { firstValueFrom } from "rxjs";
 import { FILEURL_SERVICE } from "./constants/provider.constant";
 
 @ApiTags("CRUD APIs")
@@ -47,35 +49,19 @@ export class FileUrlController {
       )}`
     );
 
-    return this.fileurlServiceClient.send("create_fileurl", createFileUrlDto);
-    // try {
-    // } catch (err: any) {
-    //   this.logger.error(
-    //     `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
-    //       err
-    //     )}`
-    //   );
+    try {
+      return await firstValueFrom(
+        this.fileurlServiceClient.send("create_fileurl", createFileUrlDto)
+      );
+    } catch (err: any) {
+      this.logger.error(
+        `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+          err
+        )}`
+      );
 
-    //   if (err.code === "ER_DUP_ENTRY") {
-    //     throw new HttpException(
-    //       {
-    //         error: true,
-    //         message: "itemId, appId, businessId must be unique togather!",
-    //         statusCode: HttpStatus.BAD_REQUEST
-    //       },
-    //       HttpStatus.BAD_REQUEST
-    //     );
-    //   }
-
-    //   throw new HttpException(
-    //     {
-    //       error: true,
-    //       message: err.message,
-    //       statusCode: HttpStatus.INTERNAL_SERVER_ERROR
-    //     },
-    //     HttpStatus.INTERNAL_SERVER_ERROR
-    //   );
-    // }
+      throw new HttpException(err, err.statusCode);
+    }
   }
 
   @Get(":id")
@@ -114,7 +100,19 @@ export class FileUrlController {
       )}`
     );
 
-    return this.fileurlServiceClient.send("get_all_fileurl", "");
+    try {
+      return await firstValueFrom(
+        this.fileurlServiceClient.send("get_all_fileurl", "")
+      );
+    } catch (err: any) {
+      this.logger.error(
+        `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+          err
+        )}`
+      );
+
+      throw new HttpException(err, err.statusCode);
+    }
   }
 
   @Get(":appId/:businessId/:itemId")
@@ -141,11 +139,23 @@ export class FileUrlController {
       )}`
     );
 
-    return this.fileurlServiceClient.send("get_fileurl", {
-      appId,
-      businessId,
-      itemId
-    });
+    try {
+      return await firstValueFrom(
+        this.fileurlServiceClient.send("get_fileurl", {
+          appId,
+          businessId,
+          itemId
+        })
+      );
+    } catch (err: any) {
+      this.logger.error(
+        `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+          err
+        )}`
+      );
+
+      throw new HttpException(err, err.statusCode);
+    }
   }
 
   @Patch(":id")
@@ -185,10 +195,22 @@ export class FileUrlController {
       )}`
     );
 
-    return this.fileurlServiceClient.send("update_fileurl", {
-      updateFileUrlDto,
-      id
-    });
+    try {
+      return await firstValueFrom(
+        this.fileurlServiceClient.send("update_fileurl", {
+          updateFileUrlDto,
+          id
+        })
+      );
+    } catch (err: any) {
+      this.logger.error(
+        `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+          err
+        )}`
+      );
+
+      throw new HttpException(err, err.statusCode);
+    }
   }
 
   @Delete(":id")
@@ -224,6 +246,18 @@ export class FileUrlController {
       )}`
     );
 
-    return this.fileurlServiceClient.send("delete_fileurl", id);
+    try {
+      return await firstValueFrom(
+        this.fileurlServiceClient.send("delete_fileurl", id)
+      );
+    } catch (err: any) {
+      this.logger.error(
+        `[src] [modules] [fileurl] [generateFileUrl] [POST - /fileurl] => ${JSON.stringify(
+          err
+        )}`
+      );
+
+      throw new HttpException(err, err.statusCode);
+    }
   }
 }
