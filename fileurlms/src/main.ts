@@ -1,15 +1,15 @@
 import { NestFactory } from "@nestjs/core";
-import { FileUrlModule } from "./fileurl.module";
 import { Transport, TcpOptions } from "@nestjs/microservices";
+import { FileUrlModule } from "./fileurl.module";
 
 async function server() {
-  const app = await NestFactory.createMicroservice(FileUrlModule, {
+  const app = await NestFactory.createMicroservice<TcpOptions>(FileUrlModule, {
     transport: Transport.TCP,
     options: {
-      host: process.env.HOST || "localhost",
-      port: process.env.PORT || 3010
+      host: process.env.HOST || "127.0.0.1",
+      port: +process.env.PORT || 3010
     }
-  } as TcpOptions);
+  });
   await app.listen();
 }
 server();
