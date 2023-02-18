@@ -1,6 +1,8 @@
-## Description
+# Fileurl Microservice
 
-API Gateway Microservice
+This is the Fileurl Microservice that is responsible for reading/creating/updating/deleting the file url in the database.
+
+### Please create the .env file by following .env.example file before running the microservice.
 
 ## Installation
 

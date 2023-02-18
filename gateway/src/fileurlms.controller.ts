@@ -39,10 +39,7 @@ export class FileUrlController {
       )}`
     );
 
-    return await this.fileurlServiceClient.send(
-      "create_fileurl",
-      createFileUrlDto
-    );
+    return this.fileurlServiceClient.send("create_fileurl", createFileUrlDto);
   }
 
   @Patch(":id")
@@ -63,7 +60,7 @@ export class FileUrlController {
       )}`
     );
 
-    return await this.fileurlServiceClient.send("update_fileurl", {
+    return this.fileurlServiceClient.send("update_fileurl", {
       updateFileUrlDto,
       id
     });
@@ -90,7 +87,7 @@ export class FileUrlController {
       )}`
     );
 
-    return await this.fileurlServiceClient.send("get_fileurl", {
+    return this.fileurlServiceClient.send("get_fileurl", {
       appId,
       businessId,
       itemId
@@ -111,7 +108,7 @@ export class FileUrlController {
       )}`
     );
 
-    return await this.fileurlServiceClient.send("get_fileurl_by_id", id);
+    return this.fileurlServiceClient.send("get_fileurl_by_id", id);
   }
 
   @Delete(":id")
@@ -127,6 +124,6 @@ export class FileUrlController {
       )}`
     );
 
-    return await this.fileurlServiceClient.send("delete_fileurl", id);
+    return this.fileurlServiceClient.send("delete_fileurl", id);
   }
 }

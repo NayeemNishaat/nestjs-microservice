@@ -7,7 +7,9 @@ async function server() {
     transport: Transport.TCP,
     options: {
       host: process.env.HOST || "127.0.0.1",
-      port: +process.env.PORT || 3010
+      port: +process.env.PORT || 3010,
+      retryAttempts: 5,
+      retryDelay: 3000
     }
   });
   await app.listen();
