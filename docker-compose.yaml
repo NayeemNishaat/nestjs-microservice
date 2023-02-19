@@ -16,7 +16,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - mynetwork
+      - laby
   mysql:
     container_name: mysql
     restart: always
@@ -33,8 +33,8 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - mynetwork
+      - laby
 volumes:
   mysql_data:
 networks:
-  mynetwork:
+  laby:
