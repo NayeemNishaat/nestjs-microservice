@@ -6,4 +6,8 @@ This is a NestJs microservices application. It has two microservices, one is the
 
 # Remark
 
-Please create the .env file by following .env.example file in the respective microservice before running them.
+Please create the .env file by following .env.example file in the respective microservice before running them. For running a microservice go to the resoective folder and run the following command:
+
+```bash
+npm ci && npm run start:dev
+```
